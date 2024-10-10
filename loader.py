@@ -6,6 +6,7 @@ import os
 
 
 logging.basicConfig(level=logging.WARNING)
+FEEDBACK_GROUP_ID = str(os.environ.get('FEEDBACK_GROUP_ID'))
 ADMIN_ID = str(os.environ.get('ADMIN_ID'))
 BOT_TOKEN = str(os.environ.get('BOT_TOKEN'))
 
