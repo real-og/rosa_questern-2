@@ -16,3 +16,4 @@ class State(StatesGroup):
     after_task_5 = State()
 
     feedback = State()
+    end = State()

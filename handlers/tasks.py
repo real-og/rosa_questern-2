@@ -140,3 +140,6 @@ async def send_welcome(message: types.Message, state: FSMContext):
     except:
         await bot.send_message(FEEDBACK_GROUP_ID, f'Ошибка пересылки от {message.from_id}')
     await message.answer(texts.thanks)
+    with open('images/discont.jpg', 'rb') as photo:
+        await message.answer_photo(photo, caption=texts.disc)
+    await State.end.set()
