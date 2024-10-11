@@ -126,11 +126,23 @@ async def send_welcome(message: types.Message, state: FSMContext):
     if message.text.lower() == 'onion':
         with open('images/onion.jpg', 'rb') as photo:
             await message.answer_photo(photo, caption=texts.ending)
-        await State.feedback.set()
-        await asyncio.sleep(2 * 60)
-        await message.answer(texts.ask_feedback)
+        await message.answer(texts.use_word, reply_markup=kb.use_word_kb)
+        await State.after_onion.set()
     else:
         await message.answer(texts.wrong_final)
+
+
+@dp.message_handler(state=State.after_onion)
+async def send_welcome(message: types.Message, state: FSMContext):
+    if message.text == texts.open_btn:
+        await message.answer(texts.ask_feedback)
+        await State.feedback.set()
+        await asyncio.sleep(2 * 60)
+        await message.answer(texts.thanks, reply_markup=kb.use_word_kb)
+        with open('images/discont.jpg', 'rb') as photo:
+            await message.answer_photo(photo, caption=texts.disc)
+    else:
+        await message.answer(texts.use_kb, reply_markup=kb.use_word_kb)
 
 
 @dp.message_handler(state=State.feedback, content_types=['any'])
@@ -139,7 +151,5 @@ async def send_welcome(message: types.Message, state: FSMContext):
         await bot.forward_message(FEEDBACK_GROUP_ID, message.chat.id, message.message_id)
     except:
         await bot.send_message(FEEDBACK_GROUP_ID, f'Ошибка пересылки от {message.from_id}')
-    await message.answer(texts.thanks)
-    with open('images/discont.jpg', 'rb') as photo:
-        await message.answer_photo(photo, caption=texts.disc)
+    await message.answer('Спасибо!')
     await State.end.set()
